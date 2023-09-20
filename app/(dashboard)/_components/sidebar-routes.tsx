@@ -1,4 +1,5 @@
 "use client";
+
 import { BarChart, Compass, Layout, List } from "lucide-react";
 import React from "react";
 import SidebarItem from "../../../components/sidebar-item";
