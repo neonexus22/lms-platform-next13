@@ -5,6 +5,7 @@ import { Course } from "@prisma/client";
 import { LayoutDashboard } from "lucide-react";
 import { notFound, redirect } from "next/navigation";
 import { FC } from "react";
+import TitleForm from "./_components/title-form";
 
 type Props = {
   params: {
@@ -57,6 +58,7 @@ const CourseIdPage: FC<Props> = async ({ params }) => {
             <IconBadge icon={LayoutDashboard} />
             <h2 className="text-xl">Customize your course</h2>
           </div>
+          <TitleForm initialData={course} courseId={course.id} />
         </div>
       </div>
     </div>
