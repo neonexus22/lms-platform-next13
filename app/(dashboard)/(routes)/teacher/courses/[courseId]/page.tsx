@@ -7,6 +7,7 @@ import { notFound, redirect } from "next/navigation";
 import { FC } from "react";
 import TitleForm from "./_components/title-form";
 import DescriptionForm from "./_components/description-form";
+import ImageForm from "./_components/image-form";
 
 type Props = {
   params: {
@@ -61,6 +62,7 @@ const CourseIdPage: FC<Props> = async ({ params }) => {
           </div>
           <TitleForm initialData={course} courseId={course.id} />
           <DescriptionForm initialData={course} courseId={course.id} />
+          <ImageForm initialData={course} courseId={course.id} />
         </div>
       </div>
     </div>
