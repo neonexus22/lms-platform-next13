@@ -1,8 +1,6 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
-import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { FileUpload } from "@/components/file-upload";
@@ -22,7 +20,6 @@ type ImageFormProps = {
 const formSchema = z.object({
   imageUrl: z.string().min(1, { message: "Image is required" }),
 });
-
 type FormSchemaType = z.infer<typeof formSchema>;
 
 const ImageForm: React.FC<ImageFormProps> = ({ initialData, courseId }) => {
@@ -30,15 +27,6 @@ const ImageForm: React.FC<ImageFormProps> = ({ initialData, courseId }) => {
 
   const toggleEdit = () => setIsEditing((current) => !current);
   const router = useRouter();
-
-  const form = useForm<FormSchemaType>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      imageUrl: initialData?.imageUrl || "",
-    },
-  });
-
-  const { isSubmitting, isValid } = form.formState;
 
   const onSubmit = async (values: FormSchemaType) => {
     try {
