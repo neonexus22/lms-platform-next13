@@ -6,7 +6,14 @@ import { Chapter } from "@prisma/client";
 import { Grip, Pencil } from "lucide-react";
 import React, { useState, useEffect } from "react";
 
-import { closestCenter, DndContext, DragEndEvent } from "@dnd-kit/core";
+import {
+  closestCenter,
+  DndContext,
+  DragEndEvent,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
 import {
   SortableContext,
   useSortable,
@@ -49,13 +56,15 @@ const SortableItem = ({
         <Grip className="h-5 w-5" />
       </div>
       {item.title}
-      <div className="ml-auto pr-2 flex items-center gap-x-2">
+      <div className="ml-auto pr-2 flex items-center gap-x-2 z-50">
         {item.isFree && <Badge>Free</Badge>}
         <Badge className={cn("bg-slate-500", item.isPublished && "bg-sky-700")}>
           {item.isPublished ? "Published" : "Draft"}
         </Badge>
         <Pencil
-          onClick={() => onEdit(item.id)}
+          onClick={() => {
+            onEdit(item.id);
+          }}
           className="w-4 h-4 cursor-pointer hover:opacity-75 transition"
         />
       </div>
@@ -73,6 +82,14 @@ const ChaptersList = ({ items, onEdit, onReorder }: ChaptersListProps) => {
   const [isMounted, setIsMounted] = useState<boolean>(false);
   const [chapters, setChapters] = useState(items);
 
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    })
+  );
+
   useEffect(() => {
     setChapters(items);
   }, [items]);
@@ -84,19 +101,17 @@ const ChaptersList = ({ items, onEdit, onReorder }: ChaptersListProps) => {
   const onDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (!over?.id || active.id === over?.id) return;
+
+    const items = Array.from(chapters);
     const sourceIndex = active.data.current?.sortable.index;
     const destinationIndex = over.data.current?.sortable.index;
-    console.log({ sourceIndex, destinationIndex, active, over });
-    const items = Array.from(chapters);
+
     const [reorderedItem] = items.splice(sourceIndex, 1);
     items.splice(destinationIndex, 0, reorderedItem);
 
     const startIndex = Math.min(sourceIndex, destinationIndex);
     const endIndex = Math.max(sourceIndex, destinationIndex);
-
     const updatedChapters = items.slice(startIndex, endIndex + 1);
-
-    console.log({ items });
 
     setChapters(items);
 
@@ -105,18 +120,18 @@ const ChaptersList = ({ items, onEdit, onReorder }: ChaptersListProps) => {
       position: items.findIndex((item) => item.id === chapter.id) + 1,
     }));
 
-    console.log({ bulkUpdateData });
-
     onReorder(bulkUpdateData);
   };
-
-  console.log({ chapters });
 
   if (!isMounted) return null;
 
   return (
     <div>
-      <DndContext collisionDetection={closestCenter} onDragEnd={onDragEnd}>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={onDragEnd}
+      >
         <SortableContext
           items={chapters}
           strategy={verticalListSortingStrategy}
