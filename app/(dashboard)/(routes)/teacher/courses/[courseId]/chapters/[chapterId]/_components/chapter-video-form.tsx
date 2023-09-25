@@ -2,7 +2,7 @@
 
 import axios from "axios";
 import { z } from "zod";
-
+import MuxPlayer from "@mux/mux-player-react";
 import { FileUpload } from "@/components/file-upload";
 import { Button } from "@/components/ui/button";
 import { Chapter, MuxData } from "@prisma/client";
@@ -77,7 +77,9 @@ const ChapterVideoForm: React.FC<ChapterVideoFormProps> = ({
             <VideoIcon className="h-10 w-10 text-slate-500" />
           </div>
         ) : (
-          <div className="relative aspect-video mt-2">Video uploaded</div>
+          <div className="relative aspect-video mt-2">
+            <MuxPlayer playbackId={initialData?.muxData?.playbackId || ""} />
+          </div>
         )
       ) : (
         <div>
