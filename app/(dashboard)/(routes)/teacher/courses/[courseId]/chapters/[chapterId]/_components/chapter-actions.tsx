@@ -22,8 +22,32 @@ const ChapterActions: React.FC<ChapterActionsProps> = ({
   chapterId,
   isPublished,
 }) => {
+  console.log({ isPublished });
+
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const onTogglePublish = async () => {
+    try {
+      setIsLoading(true);
+      if (isPublished) {
+        await axios.patch(
+          `/api/courses/${courseId}/chapters/${chapterId}/unpublish`
+        );
+        toast.success("Chapter unpublished");
+      } else {
+        await axios.patch(
+          `/api/courses/${courseId}/chapters/${chapterId}/publish`
+        );
+        toast.success("Chapter published");
+      }
+      router.refresh();
+    } catch (error: any) {
+      toast.error(error?.message || "Something went wrong!");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const onDelete = async () => {
     try {
@@ -45,7 +69,7 @@ const ChapterActions: React.FC<ChapterActionsProps> = ({
         disabled={disabled || isLoading}
         variant="outline"
         size="sm"
-        onClick={() => {}}
+        onClick={onTogglePublish}
       >
         {isPublished ? "Unpublish" : "Publish"}
       </Button>
