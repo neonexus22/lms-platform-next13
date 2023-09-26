@@ -3,6 +3,7 @@
 import ConfirmModal from "@/components/models/confirm-modal";
 import { TooltipContainer } from "@/components/tooltip-container";
 import { Button } from "@/components/ui/button";
+import { useConfettiStore } from "@/hooks/use-confetti-store";
 import axios from "axios";
 import { Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -21,6 +22,7 @@ const Actions: React.FC<ActionsProps> = ({
   isPublished,
 }) => {
   const router = useRouter();
+  const confetti = useConfettiStore();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const onTogglePublish = async () => {
@@ -32,6 +34,7 @@ const Actions: React.FC<ActionsProps> = ({
       } else {
         await axios.patch(`/api/courses/${courseId}/publish`);
         toast.success("Course published");
+        confetti.onOpen();
       }
       router.refresh();
     } catch (error: any) {
