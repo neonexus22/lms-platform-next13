@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { buttonVariants } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
 import Link from "next/link";
+import SearchInput from "./search-input";
 
 type Props = {};
 
@@ -13,26 +14,34 @@ const NavbarRoutes = (props: Props) => {
 
   const isTeacherPage = pathname?.startsWith("/teacher");
   const isPlayerPage = pathname?.includes("/chapter");
+  const isSearchPage = pathname === "/search";
 
   return (
-    <div className="flex gap-x-2 ml-auto">
-      {isTeacherPage || isPlayerPage ? (
-        <Link
-          href="/"
-          className={buttonVariants({ variant: "ghost", size: "sm" })}
-        >
-          <LogOut className="h-4 w-4 mr-2" /> Exit
-        </Link>
-      ) : (
-        <Link
-          href="/teacher/courses"
-          className={buttonVariants({ variant: "ghost", size: "sm" })}
-        >
-          Teacher Mode
-        </Link>
+    <>
+      {isSearchPage && (
+        <div className="hidden md:block">
+          <SearchInput />
+        </div>
       )}
-      <UserButton afterSignOutUrl="/" />
-    </div>
+      <div className="flex gap-x-2 ml-auto">
+        {isTeacherPage || isPlayerPage ? (
+          <Link
+            href="/"
+            className={buttonVariants({ variant: "ghost", size: "sm" })}
+          >
+            <LogOut className="h-4 w-4 mr-2" /> Exit
+          </Link>
+        ) : (
+          <Link
+            href="/teacher/courses"
+            className={buttonVariants({ variant: "ghost", size: "sm" })}
+          >
+            Teacher Mode
+          </Link>
+        )}
+        <UserButton afterSignOutUrl="/" />
+      </div>
+    </>
   );
 };
 
