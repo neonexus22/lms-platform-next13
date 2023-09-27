@@ -14,9 +14,17 @@ const ChapterIdPage = async ({ params }: ChapterIdPageProps) => {
   const { userId } = auth();
   if (!userId) return redirect("/");
 
-  const response = await getChapter({ userId, courseId, chapterId });
+  const {
+    chapter,
+    course,
+    muxData,
+    attachments,
+    nextChapter,
+    userProgress,
+    purchase,
+  } = await getChapter({ userId, courseId, chapterId });
 
-  // if (!response?.chapter || !course) return redirect("/");
+  if (!chapter || !course) return redirect("/");
 
   return <div>ChapterIdPage</div>;
 };
