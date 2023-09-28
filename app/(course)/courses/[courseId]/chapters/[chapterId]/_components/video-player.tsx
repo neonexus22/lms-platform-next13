@@ -29,9 +29,35 @@ const VideoPlayer = ({
   completeOnEnd,
   title,
 }: VideoPlayerProps) => {
+  const router = useRouter();
+  const confetti = useConfettiStore();
+
   const [isReady, setIsReady] = useState(false);
 
-  console.log({ playbackId });
+  const onClick = async () => {
+    try {
+      if (completeOnEnd) {
+        await axios.put(
+          `/api/courses/${courseId}/chapters/${chapterId}/progress`,
+          {
+            isCompleted: true,
+          }
+        );
+      }
+      if (!nextChapterId) {
+        confetti.onOpen();
+      }
+
+      toast.success("Progress updated");
+      router.refresh();
+
+      if (nextChapterId) {
+        router.push(`/courses/${courseId}/chapters/${nextChapterId}`);
+      }
+    } catch (error: any) {
+      toast.error(error.message || "Something went wrong!");
+    }
+  };
 
   return (
     <div className="relative aspect-video">
