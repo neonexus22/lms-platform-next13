@@ -34,7 +34,7 @@ const VideoPlayer = ({
 
   const [isReady, setIsReady] = useState(false);
 
-  const onClick = async () => {
+  const onEnd = async () => {
     try {
       if (completeOnEnd) {
         await axios.put(
@@ -77,7 +77,7 @@ const VideoPlayer = ({
           title={title}
           className={cn(!isReady && "hidden")}
           onCanPlay={() => setIsReady(true)}
-          onEnded={() => {}}
+          onEnded={onEnd}
           autoPlay
           playbackId={playbackId}
         />
