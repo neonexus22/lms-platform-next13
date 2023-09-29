@@ -16,8 +16,9 @@ pnpm dev
 1. NextJS 13
 2. Prisma
 3. Tailwind Css
-4. Mongodb
-5. uploadthing.com to upload files, videos, etc
+4. Shadcn ui
+5. Mongodb
+6. uploadthing.com to upload files, videos, etc
 
 ## Features Teachers can do
 1. Create chapters
